@@ -1,10 +1,12 @@
 import discord
 import requests
 import shlex
-import 
+import json
 from pprint import pprint
 
-
+with open('config.json') as f:
+    script_config = json.load(f)
+print(script_config)
 client = discord.Client()
 
 @client.event
@@ -42,8 +44,8 @@ async def on_message(message):
 		# (https://www.mediawiki.org/wiki/Special:BotPasswords) for lgname & lgpassword
 		PARAMS_1 = {
 			"action": "login",
-			"lgname": "",
-			"lgpassword": "",
+			"lgname": script_config['Wiki_Username'],
+			"lgpassword": script_config['Wiki_Password'],
 			"lgtoken": LOGIN_TOKEN,
 			"format": "json"
 		}
@@ -127,8 +129,8 @@ async def on_message(message):
 			# (https://www.mediawiki.org/wiki/Special:BotPasswords) for lgname & lgpassword
 			PARAMS_1 = {
 				"action": "login",
-				"lgname": "",
-				"lgpassword": "",
+				"lgname": script_config['Wiki_Username'],
+				"lgpassword": script_config['Wiki_Password'],
 				"lgtoken": LOGIN_TOKEN,
 				"format": "json"
 			}
@@ -176,4 +178,4 @@ async def on_message(message):
 			await message.channel.send('Contact Made, see https://www.shadowhaven.info/{name_string}'.format(name_string=contact_settings["-name"]))
 
 
-client.run('')
+client.run(script_config['Discord_API_Key'])
