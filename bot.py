@@ -105,6 +105,9 @@ async def on_message(message):
 			pprint(contact_settings)
 			if (len(aspects)+len(neg_aspects)) != int(contact_settings["-connection"]):
 				await message.channel.send('Invalid contact, contact\'s aspects do not equal the connection plus negative aspects.')
+				await message.channel.send('This could be a formating problem. I see the following aspect. ')
+				for aspect in aspects:
+					await message.channel.send('    -' + aspect)
 				contact_value = False
 		if contact_valid is True:
 			S = requests.Session()
