@@ -89,6 +89,12 @@ async def on_message(message):
 		contact_valid = True
 	
 
+		if "-type" not in contact_settings:
+			await message.channel.send('Invalid contact, flag -type not found.')
+			contact_valid = False
+		if "-faction" not in contact_settings:
+			await message.channel.send('Invalid contact, flag -faction not found.')
+			contact_valid = False
 		if "-aspects" not in contact_settings:
 			await message.channel.send('Invalid contact, flag -aspects not found.')
 			contact_valid = False
@@ -98,6 +104,17 @@ async def on_message(message):
 		if "-connection" not in contact_settings:
 			await message.channel.send('Invalid contact, flag -connection not found.')
 			contact_valid = False
+		if contact_valid:
+			if contact_settings["-type"] == "Fixer" or \
+			contact_settings["-type"] == "Gear" or \
+			contact_settings["-type"] == "Service" or \
+			contact_settings["-type"] == "Legwork" or \
+			contact_settings["-type"] == "Networking" or \
+			contact_settings["-type"] == "Generalist":
+				pass
+			else:
+				contact_valid = False
+				await message.channel.send("Invalid contact type {}, must be one of the following: Fixer, Gear, Service, Legwork, Networking, Generalist".format(contact_settings["-type"]))
 		if contact_valid:
 			raw_aspects = contact_settings["-aspects"]
 			aspects = shlex.split(raw_aspects)
@@ -156,7 +173,7 @@ async def on_message(message):
 			aspects_description_string = ""
 			negative_aspects_string = "None"
 			for aspect in aspects:
-				aspects_string = aspects_string + "[[hasAspect::{}]]<BR>\n".format(aspect)
+				aspects_string = aspects_string + "*[[hasAspect::{}]]<BR>\n".format(aspect)
 			aspects_string = aspects_string[:-5]
 			for aspect in aspects:
 				aspects_description_string = aspects_description_string + "\'\'\'{}\'\'\' - Please describe how this aspect relates to this contact\n\n".format(aspect)
@@ -168,7 +185,7 @@ async def on_message(message):
 				"title": contact_settings["-name"],
 				"token": CSRF_TOKEN,
 				"format": "json",
-				"appendtext": "{{{{Infobox\n|title = [[has name::{name_string}]]\n|image= [[File:Default-welcomer.png|200px]]\n|header1= [[Profession::Undefined]]\n|header2=\n|header3=\n|header4=\n|label5 = Contact Owner\n|data5 = \n|label6 = Connection\n|data6 = [[Connection::{connection_string}]]\n|label8 = Aspects\n|data8 = {aspects_string}\n|label9 = Negative Aspects\n|data9 = {negative_aspects_string}\n|label20 = Public Contact?\n|data20= Yes\n|label7 = Archetype\n|data7 =  [[Archetype::{type_string}]]\n|label10 = Location\n|data10= [[Location::Undefined]]\n|label11 = Metatype\n|data11 = [[Metatype::Undefined]]\n|label12 = Gender\n|data12 = [[Gender::Undefined]]\n|label13 = Age\n|data13= Undefined\n|label14= Preferred Payment Method\n|data14 = Undefined\n|label15 =  Hobbies/Vice\n|data15 = Undefined\n|label16 = Personal Life\n|data16 = Undefined\n|label17 = Faction\n|data17 = [[Faction::{faction_string}]]\n}}}}\n\n==Overview==\n\nFill this out\n\n==Aspects Description==\n\n{aspect_description}\n\n==Network==\n\n===Characters with this Contact ===\n\n{{{{#ask:\n[[-Has subobject::{{{{PAGENAME}}}}]]\n| mainlabel=-\n| ?HasConnectionName = PC Name\n| ?HasLoyalty = Loyalty\n}}}}\n\n[[Category:Contacts]]\n[[Category:Public Contacts]]\n__SHOWFACTBOX__".format(name_string=contact_settings["-name"],connection_string=contact_settings["-connection"],type_string=contact_settings["-type"],faction_string="Undefined",aspects_string=aspects_string,negative_aspects_string=negative_aspects_string,aspect_description=aspects_description_string)
+				"appendtext": "{{{{Infobox\n|title = [[has name::{name_string}]]\n|image= [[File:Default-welcomer.png|200px]]\n|header1= [[Profession::Undefined]]\n|header2=\n|header3=\n|header4=\n|label5 = Contact Owner\n|data5 = \n|label6 = Connection\n|data6 = [[Connection::{connection_string}]]\n|label9 = Aspects\n|data9 = {aspects_string}\n|label10 = Negative Aspects\n|data10 = {negative_aspects_string}\n|label20 = Public Contact?\n|data20= Yes\n|label7 = Archetype\n|data7 =  [[Archetype::{type_string}]]\n|label8 = Faction\n|data8 = [[Faction::{type_string}]]\n|label11 = Location\n|data11= [[Location::Undefined]]\n|label11 = Metatype\n|data11 = [[Metatype::Undefined]]\n|label13 = Gender\n|data13 = [[Gender::Undefined]]\n|label13 = Age\n|data13= Undefined\n|label15= Preferred Payment Method\n|data15 = Undefined\n|label15 =  Hobbies/Vice\n|data15 = Undefined\n|label17 = Personal Life\n|data17 = Undefined\n==Overview==\n\nFill this out\n\n==Aspects Description==\n\n{aspect_description}\n\n==Network==\n\n===Characters with this Contact ===\n\n{{{{#ask:\n[[-Has subobject::{{{{PAGENAME}}}}]]\n| mainlabel=-\n| ?HasConnectionName = PC Name\n| ?HasLoyalty = Loyalty\n}}}}\n\n[[Category:Contacts]]\n[[Category:Public Contacts]]\n__SHOWFACTBOX__".format(name_string=contact_settings["-name"],connection_string=contact_settings["-connection"],type_string=contact_settings["-type"],faction_string=contact_settings["-faction"],aspects_string=aspects_string,negative_aspects_string=negative_aspects_string,aspect_description=aspects_description_string)
 			}
 
 
