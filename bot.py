@@ -357,10 +357,11 @@ async def on_message(message):
 				aspects_string = aspects_string + "*[[hasAspect::{}]]<BR>\n".format(aspect)
 			aspects_string = aspects_string[:-5]
 			for aspect in aspects:
-				aspects_description_string =aspects_description_string + "{{PositiveAspect|\n" +
-						"|Aspect={}\n" +
-						"|Description=This is an example positive aspect. You can write the fluff in here. Duplicate this section as many times as needed for your contact.\n" +
-						"|}}\n" +.format(aspect)
+				aspect.replace(',', 'Comma removed due to mediawiki constraints')
+				aspects_description_string =aspects_description_string + "{{PositiveAspect|\n" + \
+						"|Aspect={}\n".format(aspect) +\
+						"|Description=This is an example description for the {} positive aspect. You can write the fluff in here. Duplicate this section as many times as needed for your contact.\n".format(aspect) +\
+						"|}}\n"
 
 			# Step 4: POST request to edit a page
 			PARAMS_3 = {
@@ -368,79 +369,75 @@ async def on_message(message):
 				"title": contact_settings["-name"],
 				"token": CSRF_TOKEN,
 				"format": "json",
-				"appendtext": "{{Infobox\n" +
-							"|title = {{PAGENAME}}  <!-- You don't need to change the title. This auto-generates for you. -->\n" + 
-							"|image= [[File:Placeholder2.jpg|200px]] <!-- You can upload your own image for your contact. Replace Placeholder2.jpg with the name of the image you'd like to use. After you create the page, click on the red link to upload the image. -->\n" +
-							"|header1= [[Profession::Undefined]] <!-- This is the \"official job\" of the contact. It is a good way to describe their skills and what sets them apart from all of the other contacts of the same Archetype. -->\n" +
-							"|header2= (Shortblurb) <!-- You can write a short description here. Also on the next couple header lines if you want. -->\n" +
-							"|header3= \n" +
-							"|header4= \n" +
-							"|label5 = Contact Owner <!-- Leave this alone --> \n" +
-							"|data5 = [https://www.reddit.com/user/Your_Handle_Here Your_Handle_Here] <!-- Here you can put your reddit name. Be sure to replace BOTH instances of Your_Handle_Here with your reddit name. -->\n" +
-							"|label6 = Connection <!-- Leave this alone -->\n" +
-							"|data6 = [[Connection::{connection_string}]] <!-- This is the connection for your contact. Remember that at chargen, your connection+loyalty can not exceed 7, raising contacts above connection 6 post-gen requires thematics approval. -->\n" +
-							"|label8 = Public Contact? <!-- Leave this alone -->\n" +
-							"|data8= Yes <!-- If you want the contact to be public, where anyone can gain the contact, leave this alone. If you want the contact to be private where only your character has the contact, change this to \"no\" and remove Category:Public Contacts from the bottom of the page. -->\n" +
-							"|label9 = [[Contact_Rules#Contact_Archetype|Archetype]] <!-- Leave this alone -->\n" +
-							"|data9 =  [[Archetype::{type_string}]] <!-- This is where you define the Archetype. Default Archetypes are:  Fixer, Service, Gear, Legwork, Networking, Generalist. Custom Archetypes may be defined as denoted on the contact rules page. -->\n" +
-							"|label10 = Location <!-- Leave this alone -->\n" +
-							"|data10= [[Location::XXX, XXX]] <!-- Where is your contact normally found? -->\n" +
-							"|label11 = Metatype <!-- Leave this alone -->\n" +
-							"|data11 = [[Metatype::Undefined]] <!-- Human, Elf, Ork, Naga, AI who inhabits an Animatronic Dancing Penguin Drone, ect. -->\n" +
-							"|label12 = Sex <!-- Leave this alone -->\n" +
-							"|data12 = [[Gender::Undefined]] <!-- You can set the gender here. But please don't be a wiseass and put "yes please" under Sex. We've done that joke already. -->\n" +
-							"|label13 = Age <!-- Leave this alone -->\n" +
-							"|data13= CONTACT AGE HERE <!-- How old is your contact? You can give them a specific age like 44, or a general age like \"mid-40s\" or \"middle-aged\" -->\n" +
-							"|label14= Preferred Payment Method <!-- Leave this alone -->\n" +
-							"|data14 = (Cash) <!-- How do they like to be compensated? -->\n" +
-							"|label15 =  Hobbies/Vice <!-- Leave this alone -->\n" +
-							"|data15 = Blackjack, and Hookers. Actually, forget the blackjack. <!-- What interests them? -->\n" +
-							"|label16 = Personal Life <!-- Leave this alone --> \n" +
-							"|data16 = Single/Divorced/None of your business <!-- This kinda explains itself. --> \n" +
-							"|label17 = Faction <!-- Leave this alone -->\n" +
-							"|data17 = [[Faction::{faction_string}]] <!-- If they belong to a faction or group, fill it in here by replacing XXX. Otherwise, delete this entire line. -->\n" +
-							"|label19 = Aspects <!-- Leave this alone -->\n" +
-							"|data19 = {{GenerateAspectList}}  <!-- Leave this alone -->\n\n" +
-							"<!-- The above aspects area is important. Replace the XXX with the aspects of your choosing. You can add more if you need to. -->\n" +
-							"}}\n\n\n" +
+				"appendtext": "{{Infobox\n" + \
+							"|title = {{PAGENAME}}  <!-- You don't need to change the title. This auto-generates for you. -->\n" + \
+							"|image= [[File:Placeholder2.jpg|200px]] <!-- You can upload your own image for your contact. Replace Placeholder2.jpg with the name of the image you'd like to use. After you create the page, click on the red link to upload the image. -->\n" +\
+							"|header1= [[Profession::Undefined]] <!-- This is the \"official job\" of the contact. It is a good way to describe their skills and what sets them apart from all of the other contacts of the same Archetype. -->\n" +\
+							"|header2= (Shortblurb) <!-- You can write a short description here. Also on the next couple header lines if you want. -->\n" +\
+							"|header3= \n" +\
+							"|header4= \n" +\
+							"|label5 = Contact Owner <!-- Leave this alone --> \n" +\
+							"|data5 = [https://www.reddit.com/user/Your_Handle_Here Your_Handle_Here] <!-- Here you can put your reddit name. Be sure to replace BOTH instances of Your_Handle_Here with your reddit name. -->\n" +\
+							"|label6 = Connection <!-- Leave this alone -->\n" +\
+							"|data6 = [[Connection::{connection_string}]] <!-- This is the connection for your contact. Remember that at chargen, your connection+loyalty can not exceed 7, raising contacts above connection 6 post-gen requires thematics approval. -->\n".format(connection_string=contact_settings["-connection"]) +\
+							"|label8 = Public Contact? <!-- Leave this alone -->\n" +\
+							"|data8= Yes <!-- If you want the contact to be public, where anyone can gain the contact, leave this alone. If you want the contact to be private where only your character has the contact, change this to \"no\" and remove Category:Public Contacts from the bottom of the page. -->\n" +\
+							"|label9 = [[Contact_Rules#Contact_Archetype|Archetype]] <!-- Leave this alone -->\n" +\
+							"|data9 =  [[Archetype::{type_string}]] <!-- This is where you define the Archetype. Default Archetypes are:  Fixer, Service, Gear, Legwork, Networking, Generalist. Custom Archetypes may be defined as denoted on the contact rules page. -->\n".format(type_string=contact_settings["-type"]) +\
+							"|label10 = Location <!-- Leave this alone -->\n" +\
+							"|data10= [[Location::XXX, XXX]] <!-- Where is your contact normally found? -->\n" +\
+							"|label11 = Metatype <!-- Leave this alone -->\n" +\
+							"|data11 = [[Metatype::Undefined]] <!-- Human, Elf, Ork, Naga, AI who inhabits an Animatronic Dancing Penguin Drone, ect. -->\n" +\
+							"|label12 = Sex <!-- Leave this alone -->\n" +\
+							"|data12 = [[Gender::Undefined]] <!-- You can set the gender here. But please don't be a wiseass and put \"yes please\" under Sex. We've done that joke already. -->\n" +\
+							"|label13 = Age <!-- Leave this alone -->\n" +\
+							"|data13= CONTACT AGE HERE <!-- How old is your contact? You can give them a specific age like 44, or a general age like \"mid-40s\" or \"middle-aged\" -->\n" +\
+							"|label14= Preferred Payment Method <!-- Leave this alone -->\n" +\
+							"|data14 = (Cash) <!-- How do they like to be compensated? -->\n" +\
+							"|label15 =  Hobbies/Vice <!-- Leave this alone -->\n" +\
+							"|data15 = Blackjack, and Hookers. Actually, forget the blackjack. <!-- What interests them? -->\n" +\
+							"|label16 = Personal Life <!-- Leave this alone --> \n" +\
+							"|data16 = Single/Divorced/None of your business <!-- This kinda explains itself. --> \n" +\
+							"|label17 = Faction <!-- Leave this alone -->\n" +\
+							"|data17 = [[Faction::{faction_string}]] <!-- If they belong to a faction or group, fill it in here by replacing XXX. Otherwise, delete this entire line. -->\n".format(faction_string=contact_settings["-faction"]) +\
+							"|label19 = Aspects <!-- Leave this alone -->\n" +\
+							"|data19 = {{GenerateAspectList}}  <!-- Leave this alone -->\n\n" +\
+							"}}\n\n\n" +\
 
 
-							"==Overview==\n" +
-							"This is where you would write a blurb about the contact.\n\n" +
+							"==Overview==\n" +\
+							"This is where you would write a blurb about the contact.\n\n" +\
 
-							"==Aspects Description==\n" +
-							"<!-- Do not remove the below text. It's super important for the Aspect table. -->\n" +
-							"{{AspectTable|\n" +
-							"<!-- Do not remove the above code. It's super important. You can add new aspects below using the PositiveAspect and NegativeAspect template you see below. To add additional aspects, simply copy/paste one of the blocks below and update it with the name of the aaspect, and a short description.  -->\n\n\n" +
+							"==Aspects Description==\n" +\
+							"<!-- Do not remove the below text. It's super important for the Aspect table. -->\n" +\
+							"{{AspectTable|\n" +\
+							"<!-- Do not remove the above code. It's super important. You can add new aspects below using the PositiveAspect and NegativeAspect template you see below. To add additional aspects, simply copy/paste one of the blocks below and update it with the name of the aspect, and a short description.  -->\n\n\n" +\
 
 
-						"<!-- Below is an example of a positive aspect. You may duplicate this as many times as necessary. -->\n" +
-						"{{PositiveAspect|\n" +
-						"|Aspect=Example Positive Aspect\n" +
-						"|Description=This is an example positive aspect. You can write the fluff in here. Duplicate this section as many times as needed for your contact.\n" +
-						"|}}\n" +
-						"<!-- Above is an example of a positive aspect. You may duplicate this as many times as necessary. -->\n\n\n" +
+						"<!-- Below is an example of a positive aspect. You may duplicate this as many times as necessary. For Negative Aspects, Replace {{PositiveAspect| With {{NegativeAspect|    -->\n" +\
+						"{aspects_description_string}\n".format(aspects_description_string=aspects_description_string) +\
+						"<!-- Above is an example of a positive aspect. You may duplicate this as many times as necessary. -->\n\n\n" +\
 
 
 
-						"<!-- Do not remove the below text. It's super important for the Aspect table. All aspects should be listed above this line. -->\n" +
-						"}}\n" +
-						"<!-- Do not remove the below text. -->\n" +
+						"<!-- Do not remove the below text. It's super important for the Aspect table. All aspects should be listed above this line. -->\n" +\
+						"}}\n" +\
+						"<!-- Do not remove the above text. -->\n" +\
 
-						"==Dicepools==\n" +
-						"{{ContactDicepools}}\n" +
+						"==Dicepools==\n" +\
+						"{{ContactDicepools}}\n" +\
 						"<!-- You do not need to mess with this. This template should automatically generate a table with dicepools based on the Archetype and the connection. If it comes up as a broken red link, don't panic and ask @wiki for help on the discord.-->\n\n" +
 
-						"==Network==\n" +
-						"===Player Characters with this Contact===\n" +
-						"{{ContactPlayerConnections}}\n" +
-						"<!-- You do not need to mess with this. This template should automatically generate a table with everyone who has the contact on their wiki page. -->\n\n" +
+						"==Network==\n" +\
+						"===Player Characters with this Contact===\n" +\
+						"{{ContactPlayerConnections}}\n" +\
+						"<!-- You do not need to mess with this. This template should automatically generate a table with everyone who has the contact on their wiki page. -->\n\n" +\
 
-						"===NPC who know this contact===\n" +
-						"[[Category:Contacts]]\n" +
-						"[[Category:Public Contacts]]\n\n" +
+						"===NPC who know this contact===\n" +\
+						"[[Category:Contacts]]\n" +\
+						"[[Category:Public Contacts]]\n\n" +\
 
-						"__SHOWFACTBOX__".format(name_string=contact_settings["-name"],connection_string=contact_settings["-connection"],type_string=contact_settings["-type"],faction_string=contact_settings["-faction"],aspects_string=aspects_string,negative_aspects_string=negative_aspects_string)
+						"__SHOWFACTBOX__".format(name_string=contact_settings["-name"],connection_string=contact_settings["-connection"],type_string=contact_settings["-type"],faction_string=contact_settings["-faction"],aspects_description_string=aspects_description_string,negative_aspects_string=negative_aspects_string)
 			}
 
 
